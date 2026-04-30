@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Screen | Card NFC Interattive</title>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top, #123b66 0%, #07111f 45%, #02050a 100%);
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 22px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1180px;
+      margin: auto;
+      padding: 10px 0 30px;
+    }
+
+    .logo {
+      height: 52px;
+    }
+
+    .nav-btn {
+      color: #fff;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero {
+      max-width: 1180px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 40px;
+      align-items: center;
+      padding: 35px 0 60px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 9px 15px;
+      border-radius: 999px;
+      background: rgba(0, 174, 239, .15);
+      border: 1px solid rgba(0, 174, 239, .45);
+      color: #7fe7ff;
+      margin-bottom: 20px;
+      font-size: 14px;
+      letter-spacing: .5px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 6vw, 72px);
+      line-height: .95;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      background: linear-gradient(90deg, #23c7ff, #7a5cff, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      line-height: 1.55;
+      color: #d8e7f7;
+      max-width: 680px;
+      margin-bottom: 30px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      color: #fff;
+      padding: 15px 24px;
+      border-radius: 14px;
+      font-weight: 700;
+      transition: .25s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00aeef, #6548ff);
+      box-shadow: 0 20px 45px rgba(0, 174, 239, .25);
+    }
+
+    .btn-secondary {
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.06);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .card-preview {
+      position: relative;
+      min-height: 440px;
+      border-radius: 34px;
+      padding: 28px;
+      background: linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 40px 100px rgba(0,0,0,.45);
+      overflow: hidden;
+    }
+
+    .nfc-card {
+      position: absolute;
+      inset: 55px 35px auto 35px;
+      height: 260px;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(0,174,239,.95), rgba(101,72,255,.85)),
+        url("https://digital-screen.it/wp-content/uploads/2024/01/cropped-logo-digital-screen-orizzontale-White-200x50.png");
+      background-repeat: no-repeat;
+      background-position: 28px 28px;
+      background-size: 170px auto;
+      transform: rotate(-5deg);
+      box-shadow: 0 30px 80px rgba(0,174,239,.35);
+      padding: 34px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .nfc-card h2 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .chip {
+      width: 58px;
+      height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ffd978, #aa7b20);
+      margin-bottom: 80px;
+    }
+
+    .phone {
+      position: absolute;
+      right: 35px;
+      bottom: 35px;
+      width: 190px;
+      height: 330px;
+      border-radius: 32px;
+      background: #050b15;
+      border: 8px solid #111a28;
+      box-shadow: 0 25px 70px rgba(0,0,0,.6);
+      padding: 18px;
+    }
+
+    .phone-screen {
+      height: 100%;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #112b46, #08111f);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px;
+    }
+
+    .tap {
+      font-size: 42px;
+      margin-bottom: 12px;
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.12); opacity: .7; }
+    }
+
+    section {
+      max-width: 1180px;
+      margin: auto;
+      padding: 55px 0;
+    }
+
+    .section-title {
+      font-size: clamp(30px, 4vw, 48px);
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .section-desc {
+      text-align: center;
+      color: #c9d9ea;
+      max-width: 780px;
+      margin: 0 auto 38px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .box {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 24px;
+      padding: 24px;
+      min-height: 220px;
+      transition: .25s;
+    }
+
+    .box:hover {
+      transform: translateY(-6px);
+      background: rgba(255,255,255,.11);
+    }
+
+    .icon {
+      font-size: 38px;
+      margin-bottom: 16px;
+    }
+
+    .box h3 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .box p {
+      color: #c8d8e8;
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 35px;
+    }
+
+    .step {
+      padding: 28px;
+      border-radius: 26px;
+      background: linear-gradient(145deg, rgba(0,174,239,.16), rgba(101,72,255,.09));
+      border: 1px solid rgba(0,174,239,.25);
+    }
+
+    .num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00aeef, #6548ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .final {
+      text-align: center;
+      padding: 55px 25px;
+      border-radius: 34px;
+      background: linear-gradient(135deg, rgba(0,174,239,.2), rgba(101,72,255,.18));
+      border: 1px solid rgba(255,255,255,.14);
+      margin-bottom: 45px;
+    }
+
+    .final h2 {
+      font-size: clamp(30px, 5vw, 54px);
+      margin-bottom: 18px;
+    }
+
+    .final p {
+      max-width: 760px;
+      margin: 0 auto 28px;
+      color: #d8e7f7;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      color: #9fb4c8;
+      padding: 35px 10px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .grid, .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .card-preview {
+        min-height: 520px;
+      }
+
+      .nfc-card {
+        left: 18px;
+        right: 18px;
+      }
+
+      .phone {
+        right: 50%;
+        transform: translateX(50%);
+        bottom: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <header>
+      <img class="logo" src="https://digital-screen.it/wp-content/uploads/2024/01/cropped-logo-digital-screen-orizzontale-White-200x50.png" alt="Digital Screen">
+      <a class="nav-btn" href="https://www.digital-screen.it" target="_blank">Visita il sito</a>
+    </header>
+
+    <main class="hero">
+      <div>
+        <div class="badge">CARD NFC DIGITAL SCREEN</div>
+        <h1>La tua identità digitale <span>in un solo tocco</span></h1>
+        <p class="subtitle">
+          Le nostre card NFC trasformano un semplice biglietto da visita in una landing page interattiva,
+          professionale e sempre aggiornata. Basta avvicinare la card allo smartphone per aprire profilo,
+          contatti, social, video, cataloghi, avatar AI e contenuti personalizzati.
+        </p>
+
+        <div class="cta-row">
+          <a href="#come-funziona" class="btn btn-primary">Scopri come funziona</a>
+          <a href="https://www.digital-screen.it/contatti/" target="_blank" class="btn btn-secondary">Richiedi informazioni</a>
+        </div>
+      </div>
+
+      <div class="card-preview">
+        <div class="nfc-card">
+          <div class="chip"></div>
+          <h2>Smart NFC Card</h2>
+          <p>Tap. Connect. Impress.</p>
+        </div>
+
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="tap">📲</div>
+            <strong>Avvicina la card</strong>
+            <p style="margin-top:10px;color:#bfd2e6;">La landing si apre automaticamente</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <section id="come-funziona">
+      <h2 class="section-title">Come funziona la card NFC</h2>
+      <p class="section-desc">
+        La tecnologia NFC permette allo smartphone di leggere la card senza applicazioni.
+        Il cliente avvicina il telefono e viene portato direttamente alla tua pagina digitale personalizzata.
+      </p>
+
+      <div class="timeline">
+        <div class="step">
+          <div class="num">1</div>
+          <h3>Avvicina la card</h3>
+          <p>La card viene appoggiata o avvicinata al retro dello smartphone compatibile.</p>
+        </div>
+
+        <div class="step">
+          <div class="num">2</div>
+          <h3>Si apre il link</h3>
+          <p>Il telefono rileva il chip NFC e apre automaticamente la landing page dedicata.</p>
+        </div>
+
+        <div class="step">
+          <div class="num">3</div>
+          <h3>Il cliente interagisce</h3>
+          <p>Può salvare i contatti, aprire WhatsApp, visitare i social, vedere video o parlare con un avatar AI.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Cosa può contenere la tua landing</h2>
+      <p class="section-desc">
+        Ogni card può essere collegata a una pagina digitale costruita su misura per aziende,
+        professionisti, venditori, agenti, showroom, negozi e attività commerciali.
+      </p>
+
+      <div class="grid">
+        <div class="box">
+          <div class="icon">👤</div>
+          <h3>Profilo personale</h3>
+          <p>Foto, nome, ruolo, descrizione professionale e presentazione aziendale.</p>
+        </div>
+
+        <div class="box">
+          <div class="icon">📞</div>
+          <h3>Contatti rapidi</h3>
+          <p>Telefono, email, WhatsApp, indirizzo, sito web e navigazione Google Maps.</p>
+        </div>
+
+        <div class="box">
+          <div class="icon">🌐</div>
+          <h3>Social e link</h3>
+          <p>Instagram, Facebook, LinkedIn, Telegram, YouTube, cataloghi e portfolio.</p>
+        </div>
+
+        <div class="box">
+          <div class="icon">🤖</div>
+          <h3>Avatar AI</h3>
+          <p>Possibilità di integrare un assistente virtuale interattivo che parla con il cliente.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="final">
+        <h2>Non è solo una card. È un’esperienza digitale.</h2>
+        <p>
+          Con Digital Screen la tua card NFC diventa uno strumento commerciale moderno:
+          elegante, aggiornabile, immediato e capace di lasciare un forte effetto wow al primo contatto.
+        </p>
+        <a href="https://www.digital-screen.it/contatti/" target="_blank" class="btn btn-primary">
+          Richiedi la tua card NFC
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      Digital Screen Italia SRL — Soluzioni digital signage, ologrammi, totem interattivi e card NFC.
+    </footer>
+
+  </div>
+</body>
+</html>
